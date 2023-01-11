@@ -1,8 +1,10 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from app.db import db
+from app.views import users_bp
 
 
 app = Flask(__name__)
 app.config.from_pyfile("application.cfg")
+db.init_app(app)
 
-db = SQLAlchemy(app)
+app.register_blueprint(users_bp)

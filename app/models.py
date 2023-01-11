@@ -1,5 +1,5 @@
 from enum import Enum
-from app import db
+from app.db import db
 
 
 class Gender(Enum):
