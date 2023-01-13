@@ -18,13 +18,13 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
-    gender = db.Column(db.Enum("female", "male", name="gender_type"))
+    gender = db.Column(db.Enum("Female", "Male", name="gender_type"))
     age = db.Column(db.Enum(
         "20-24", "25-29", "30-34", "35-39", "40-44",
         "45-49", "50-54", "55-59", "60-64", "65-69", "> 70",
         name="age_type"
     ))
-    place_of_residence = db.Column(db.String)
+    zip_code = db.Column(db.Integer)
     marital_status = db.Column(db.Enum(
         "Single without children",
         "Single with children",
@@ -33,6 +33,6 @@ class User(db.Model):
         name="martial_status_type"
     ))
     income = db.Column(db.Enum(
-        "above average", "average", "below average",
+        "Above average", "Average", "Below average",
         name="income_type"
     ))

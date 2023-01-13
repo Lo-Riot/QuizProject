@@ -9,7 +9,7 @@ def create_user(
     user = User(
         gender=gender,
         age=age,
-        place_of_residence=place_of_residence,
+        zip_code=place_of_residence,
         marital_status=marital_status,
         income=income
     )
