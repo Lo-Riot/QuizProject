@@ -16,7 +16,7 @@ def quiz():
         data['Gender'],
         data['Age'],
         data['Zip-code'],
-        data['Marital_status'],
+        data['Marital status'],
         data['Income']
     )
 
