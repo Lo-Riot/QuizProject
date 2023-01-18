@@ -1,17 +1,19 @@
-from enum import Enum
 from app.db import db
 
+user_order_table = db.Table(
+    "user_order",
+    db.metadata,
+    db.Column("user_id", db.ForeignKey("users.id")),
+    db.Column("order_id", db.ForeignKey("orders.id")),
+)
 
-class Gender(Enum):
-    female = "female"
-    male = "male"
 
+class Admin(db.Model):
+    __tablename__ = "admins"
 
-class MaritalStatus(Enum):
-    status_1 = "Single without children"
-    status_2 = "Single with children"
-    status_3 = "Married without children"
-    status_4 = "Married with children"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, unique=True)
+    password = db.Column(db.String)
 
 
 class User(db.Model):
@@ -36,3 +38,16 @@ class User(db.Model):
         "Above average", "Average", "Below average",
         name="income_type"
     ))
+
+    orders = db.relationship(
+        "Order", secondary=user_order_table, lazy="selectin"
+    )
+
+
+class Order(db.Model):
+    __tablename__ = "orders"
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String)
+    price = db.Column(db.String)
+    date = db.Column(db.String)
