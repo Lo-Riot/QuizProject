@@ -45,7 +45,7 @@ def order():
         data['email'],
         data['variant'],
         order_date,
-        request.path
+        data['Page']
     )
     db.session.commit()
 
