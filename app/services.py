@@ -45,11 +45,14 @@ def get_users() -> list[User]:
     return users
 
 
-def create_order(user_id: str, email: str, price: str, date: str) -> None:
+def create_order(
+    user_id: str, email: str, price: str, date: str, page: str
+) -> None:
     order = Order(
         email=email,
         price=price,
-        date=date
+        date=date,
+        page=page
     )
     db.session.add(order)
 

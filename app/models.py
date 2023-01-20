@@ -51,3 +51,4 @@ class Order(db.Model):
     email = db.Column(db.String)
     price = db.Column(db.String)
     date = db.Column(db.String)
+    page = db.Column(db.String)

@@ -44,7 +44,8 @@ def order():
         session.get('user_id'),
         data['email'],
         data['variant'],
-        order_date
+        order_date,
+        request.path
     )
     db.session.commit()
 
