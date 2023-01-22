@@ -3,8 +3,8 @@ from app.db import db
 user_order_table = db.Table(
     "user_order",
     db.metadata,
-    db.Column("user_id", db.ForeignKey("users.id")),
-    db.Column("order_id", db.ForeignKey("orders.id")),
+    db.Column("user_id", db.ForeignKey("users.id", ondelete="CASCADE")),
+    db.Column("order_id", db.ForeignKey("orders.id", ondelete="CASCADE")),
 )
 
 
@@ -40,7 +40,11 @@ class User(db.Model):
     ))
 
     orders = db.relationship(
-        "Order", secondary=user_order_table, lazy="selectin"
+        "Order",
+        secondary=user_order_table,
+        back_populates="users",
+        cascade="all, delete",
+        lazy="selectin",
     )
 
 
@@ -52,3 +56,9 @@ class Order(db.Model):
     price = db.Column(db.String)
     date = db.Column(db.String)
     page = db.Column(db.String)
+
+    users = db.relationship(
+        "User",
+        secondary=user_order_table,
+        back_populates="orders",
+    )

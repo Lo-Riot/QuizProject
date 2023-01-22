@@ -3,6 +3,7 @@ from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 
 from app.db import db
+from sqlalchemy.sql import text
 from app.models import Admin, User, Order
 
 
@@ -58,6 +59,15 @@ def create_order(
 
     user = db.session.get(User, user_id)
     user.orders.append(order)
+
+
+def delete_tables() -> None:
+    delete_stmts = (
+        text("DELETE FROM users"),
+        text("DELETE FROM orders"),
+    )
+    for stmt in delete_stmts:
+        db.session.execute(stmt)
 
 
 def export_to_excel() -> Workbook:
