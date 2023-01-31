@@ -28,8 +28,8 @@ class User(db.Model):
     ))
     zip_code = db.Column(db.Integer)
     marital_status = db.Column(db.Enum(
-        "Single without children",
-        "Single with children",
+        "No married without children",
+        "No married with children",
         "Married without children",
         "Married with children",
         name="martial_status_type"
