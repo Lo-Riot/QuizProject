@@ -3,7 +3,7 @@ from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 
 from app.db import db
-from sqlalchemy.sql import text
+from sqlalchemy.sql import text, desc
 from app.models import Admin, User, Order
 
 
@@ -53,7 +53,9 @@ def update_user(
 
 
 def get_users() -> list[User]:
-    stmt = db.select(User).options(db.selectinload(User.orders))
+    stmt = db.select(User).order_by(desc(User.id)).options(
+        db.selectinload(User.orders)
+    )
     result = db.session.execute(stmt)
     users = result.scalars().all()
     return users
