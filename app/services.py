@@ -78,6 +78,7 @@ def delete_tables() -> None:
     delete_stmts = (
         text("DELETE FROM users"),
         text("DELETE FROM orders"),
+        text("TRUNCATE users, orders, user_order RESTART IDENTITY"),
     )
     for stmt in delete_stmts:
         db.session.execute(stmt)
