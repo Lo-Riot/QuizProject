@@ -25,17 +25,30 @@ def get_admin_by_id(admin_id: int) -> Optional[Admin]:
 
 
 def create_user(
-    gender: str, age: str, place_of_residence: str,
+    gender: str, age: str, zip_code: str,
     marital_status: str, income: str
 ) -> User:
     user = User(
         gender=gender,
         age=age,
-        zip_code=place_of_residence,
+        zip_code=zip_code,
         marital_status=marital_status,
         income=income
     )
     db.session.add(user)
+    return user
+
+
+def update_user(
+    user_id: str, gender: str, age: str,
+    zip_code: str, marital_status: str, income: str
+) -> User:
+    user = db.session.get(User, user_id)
+    user.gender = gender
+    user.age = age
+    user.zip_code = zip_code
+    user.marital_status = marital_status
+    user.income = income
     return user
 
 
@@ -85,7 +98,10 @@ def export_to_excel() -> Workbook:
         for order in user.orders:
             for col, order_column in enumerate(order.__table__.columns.keys()):
                 if order_column != 'id':
-                    ws.cell(column=col+1, row=row, value=getattr(order, order_column))
+                    ws.cell(
+                        column=col+1, row=row,
+                        value=getattr(order, order_column)
+                    )
             row += 1
         row += 1
 

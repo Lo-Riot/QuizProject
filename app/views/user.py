@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, session
 from datetime import datetime
 from app.db import db
-from app.services import create_user, create_order
+from app.services import create_user, update_user, create_order
 
 
 users_bp = Blueprint('users', __name__, url_prefix='/api')
@@ -15,19 +15,23 @@ def quiz():
     if data == {'test': 'test'}:
         return jsonify({'success': True})
 
-    user = create_user(
+    user_id = session.get('user_id')
+    quiz_answers = {
         data['Gender'],
         data['Age'],
         data['Zip-code'],
         data['Marital status'],
         data['Income'],
-    )
+    }
+
+    if user_id is not None:
+        update_user(user_id, **quiz_answers)
+    else:
+        user = create_user(**quiz_answers)
+        session['user_id'] = user.id
+        session.permanent = True
+
     db.session.commit()
-
-    session.clear()
-    session['user_id'] = user.id
-    session.permanent = True
-
     return jsonify({'success': True})
 
 
