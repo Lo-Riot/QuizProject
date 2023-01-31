@@ -26,13 +26,15 @@ def quiz():
 
     if user_id is not None:
         update_user(user_id, *quiz_answers)
+        db.session.commit()
     else:
         user = create_user(*quiz_answers)
+        db.session.commit()
+
         session.clear()
         session['user_id'] = user.id
         session.permanent = True
 
-    db.session.commit()
     return jsonify({'success': True})
 
 
