@@ -16,18 +16,18 @@ def quiz():
         return jsonify({'success': True})
 
     user_id = session.get('user_id')
-    quiz_answers = {
+    quiz_answers = (
         data['Gender'],
         data['Age'],
         data['Zip-code'],
         data['Marital status'],
         data['Income'],
-    }
+    )
 
     if user_id is not None:
-        update_user(user_id, **quiz_answers)
+        update_user(user_id, *quiz_answers)
     else:
-        user = create_user(**quiz_answers)
+        user = create_user(*quiz_answers)
         session['user_id'] = user.id
         session.permanent = True
 
