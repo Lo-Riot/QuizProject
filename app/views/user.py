@@ -1,7 +1,10 @@
 from flask import Blueprint, request, jsonify, session
 from datetime import datetime
 from app.db import db
-from app.services import create_user, update_user, create_order
+from app.models import User
+from app.services import (
+    get_entity_by_id, create_user, update_user, create_order
+)
 
 
 users_bp = Blueprint('users', __name__, url_prefix='/api')
@@ -24,7 +27,9 @@ def quiz():
         data['Income'],
     )
 
-    if user_id is not None:
+    user = get_entity_by_id(User, user_id)
+
+    if user is not None:
         update_user(user_id, *quiz_answers)
         db.session.commit()
     else:
