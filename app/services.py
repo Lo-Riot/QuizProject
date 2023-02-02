@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional, Type, Union
 from uuid import uuid4
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
@@ -9,8 +9,8 @@ from app.models import Admin, User, Order
 
 
 def get_entity_by_id(
-    Entity: Type[User | Admin], entity_id: Optional[str | int]
-) -> Optional[User | Admin]:
+    Entity: Type[Union[User, Admin]], entity_id: Optional[Union[str, int]]
+) -> Optional[Union[User, Admin]]:
     return db.session.get(Entity, entity_id)
 
 
