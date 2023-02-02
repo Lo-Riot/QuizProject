@@ -33,6 +33,7 @@ def login():
         admin = get_admin_by_username(username)
         if admin is not None and check_password_hash(admin.password, password):
             session['admin_id'] = admin.id
+            session.permanent = True
             return redirect('/admin/panel')
 
     admin = get_entity_by_id(Admin, session.get('admin_id'))
