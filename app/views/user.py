@@ -1,9 +1,8 @@
 from flask import Blueprint, request, jsonify, session
 from datetime import datetime
 from app.db import db
-from app.models import User
 from app.services import (
-    get_entity_by_id, create_user, update_user, create_order
+    get_user_by_uuid, create_user, update_user, create_order
 )
 
 
@@ -26,7 +25,7 @@ def quiz():
         data['Income'],
     )
 
-    user = get_entity_by_id(User, session.get('user_id'))
+    user = get_user_by_uuid(session.get('user_id'))
 
     if user is not None:
         update_user(user, *quiz_answers)
@@ -36,7 +35,7 @@ def quiz():
         db.session.commit()
 
         session.clear()
-        session['user_id'] = user.id
+        session['user_id'] = user.uuid
         session.permanent = True
 
     return jsonify({'success': True})
@@ -51,7 +50,7 @@ def order():
 
     order_date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-    user = get_entity_by_id(User, session.get('user_id'))
+    user = get_user_by_uuid(session.get('user_id'))
     create_order(
         user,
         data['email'],

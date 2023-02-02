@@ -20,6 +20,7 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
+    uuid = db.Column(db.String, unique=True)
     gender = db.Column(db.Enum("Female", "Male", name="gender_type"))
     age = db.Column(db.Enum(
         "20-24", "25-29", "30-34", "35-39", "40-44",

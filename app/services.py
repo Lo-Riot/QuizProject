@@ -1,4 +1,5 @@
 from typing import Optional, Type
+from uuid import uuid4
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 
@@ -30,6 +31,7 @@ def create_user(
     marital_status: str, income: str
 ) -> User:
     user = User(
+        uuid=uuid4().hex,
         gender=gender,
         age=age,
         zip_code=zip_code,
@@ -37,6 +39,15 @@ def create_user(
         income=income
     )
     db.session.add(user)
+    return user
+
+
+def get_user_by_uuid(uuid: Optional[str]) -> Optional[User]:
+    stmt = db.select(User).where(User.uuid == uuid).options(
+        db.selectinload(User.orders)
+    )
+    result = db.session.execute(stmt)
+    user = result.scalar()
     return user
 
 
