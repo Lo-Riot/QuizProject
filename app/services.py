@@ -105,7 +105,10 @@ def export_to_excel() -> Workbook:
     row = 1
     for user in users:
         for col, user_column in enumerate(user.__table__.columns.keys()):
-            ws.cell(column=col+1, row=row, value=getattr(user, user_column))
+            if user_column != 'uuid':
+                ws.cell(
+                    column=col+1, row=row, value=getattr(user, user_column)
+                )
         row += 1
 
         for order in user.orders:
