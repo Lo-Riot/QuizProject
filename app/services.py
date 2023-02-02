@@ -1,10 +1,16 @@
-from typing import Optional
+from typing import Optional, Type
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 
 from app.db import db
 from sqlalchemy.sql import text, desc
 from app.models import Admin, User, Order
+
+
+def get_entity_by_id(
+    Entity: Type[User | Admin], entity_id: Optional[str | int]
+) -> Optional[User | Admin]:
+    return db.session.get(Entity, entity_id)
 
 
 def create_admin(username: str, password: str) -> None:
@@ -16,11 +22,6 @@ def get_admin_by_username(username: str) -> Optional[Admin]:
     stmt = db.select(Admin).where(Admin.username == username)
     result = db.session.execute(stmt)
     admin = result.scalar()
-    return admin
-
-
-def get_admin_by_id(admin_id: int) -> Optional[Admin]:
-    admin = db.session.get(Admin, admin_id)
     return admin
 
 
@@ -42,13 +43,15 @@ def create_user(
 def update_user(
     user_id: str, gender: str, age: str,
     zip_code: str, marital_status: str, income: str
-) -> User:
-    user = db.session.get(User, user_id)
-    user.gender = gender
-    user.age = age
-    user.zip_code = zip_code
-    user.marital_status = marital_status
-    user.income = income
+) -> Optional[Type[User]]:
+    user = get_entity_by_id(User, user_id)
+
+    if user is not None:
+        user.gender = gender
+        user.age = age
+        user.zip_code = zip_code
+        user.marital_status = marital_status
+        user.income = income
     return user
 
 
@@ -72,8 +75,9 @@ def create_order(
     )
     db.session.add(order)
 
-    user = db.session.get(User, user_id)
-    user.orders.append(order)
+    user = get_entity_by_id(User, user_id)
+    if user is not None:
+        user.orders.append(order)
 
 
 def delete_tables() -> None:

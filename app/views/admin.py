@@ -4,8 +4,9 @@ from flask import (
 )
 from werkzeug.security import check_password_hash
 from app.db import db
+from app.models import Admin
 from app.services import (
-    get_admin_by_username, get_admin_by_id, export_statistics, delete_tables
+    get_admin_by_username, get_entity_by_id, export_statistics, delete_tables
 )
 
 
@@ -15,7 +16,7 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 @admin_bp.route('/panel', methods=["GET"])
 def panel():
     admin_id = session.get('admin_id')
-    admin = get_admin_by_id(admin_id)
+    admin = get_entity_by_id(Admin, admin_id)
 
     if admin is not None:
         return render_template("admin_panel.html")
@@ -35,7 +36,7 @@ def login():
             return redirect('/admin/panel')
 
     admin_id = session.get('admin_id')
-    admin = get_admin_by_id(admin_id)
+    admin = get_entity_by_id(Admin, admin_id)
 
     if admin is not None:
         return redirect('/admin/panel')
@@ -46,7 +47,7 @@ def login():
 @admin_bp.route('/statistics', methods=["GET"])
 def statistics():
     admin_id = session.get('admin_id')
-    admin = get_admin_by_id(admin_id)
+    admin = get_entity_by_id(Admin, admin_id)
 
     if admin is not None:
         statistics_filename = "statistics.xlsx"
@@ -59,9 +60,11 @@ def statistics():
 @admin_bp.route('/reset', methods=["GET"])
 def reset_db():
     admin_id = session.get('admin_id')
-    admin = get_admin_by_id(admin_id)
+    admin = get_entity_by_id(Admin, admin_id)
 
     if admin is not None:
         delete_tables()
         db.session.commit()
-        return jsonify({'success': True, 'msg': "Данные из всех таблиц удалены."})
+        return jsonify(
+            {'success': True, 'msg': "Данные из всех таблиц удалены."}
+        )
