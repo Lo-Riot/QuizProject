@@ -18,7 +18,6 @@ def quiz():
     if data == {'test': 'test'}:
         return jsonify({'success': True})
 
-    user_id = session.get('user_id')
     quiz_answers = (
         data['Gender'],
         data['Age'],
@@ -27,10 +26,10 @@ def quiz():
         data['Income'],
     )
 
-    user = get_entity_by_id(User, user_id)
+    user = get_entity_by_id(User, session.get('user_id'))
 
     if user is not None:
-        update_user(user_id, *quiz_answers)
+        update_user(user, *quiz_answers)
         db.session.commit()
     else:
         user = create_user(*quiz_answers)
@@ -52,8 +51,9 @@ def order():
 
     order_date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
+    user = get_entity_by_id(User, session.get('user_id'))
     create_order(
-        session.get('user_id'),
+        user,
         data['email'],
         data['variant'],
         order_date,

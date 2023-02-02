@@ -41,17 +41,14 @@ def create_user(
 
 
 def update_user(
-    user_id: str, gender: str, age: str,
+    user: User, gender: str, age: str,
     zip_code: str, marital_status: str, income: str
 ) -> Optional[Type[User]]:
-    user = get_entity_by_id(User, user_id)
-
-    if user is not None:
-        user.gender = gender
-        user.age = age
-        user.zip_code = zip_code
-        user.marital_status = marital_status
-        user.income = income
+    user.gender = gender
+    user.age = age
+    user.zip_code = zip_code
+    user.marital_status = marital_status
+    user.income = income
     return user
 
 
@@ -65,7 +62,7 @@ def get_users() -> list[User]:
 
 
 def create_order(
-    user_id: str, email: str, price: str, date: str, page: str
+    user: User, email: str, price: str, date: str, page: str
 ) -> None:
     order = Order(
         email=email,
@@ -75,9 +72,7 @@ def create_order(
     )
     db.session.add(order)
 
-    user = get_entity_by_id(User, user_id)
-    if user is not None:
-        user.orders.append(order)
+    user.orders.append(order)
 
 
 def delete_tables() -> None:

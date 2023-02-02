@@ -35,8 +35,7 @@ def login():
             session['admin_id'] = admin.id
             return redirect('/admin/panel')
 
-    admin_id = session.get('admin_id')
-    admin = get_entity_by_id(Admin, admin_id)
+    admin = get_entity_by_id(Admin, session.get('admin_id'))
 
     if admin is not None:
         return redirect('/admin/panel')
@@ -46,8 +45,7 @@ def login():
 
 @admin_bp.route('/statistics', methods=["GET"])
 def statistics():
-    admin_id = session.get('admin_id')
-    admin = get_entity_by_id(Admin, admin_id)
+    admin = get_entity_by_id(Admin, session.get('admin_id'))
 
     if admin is not None:
         statistics_filename = "statistics.xlsx"
@@ -59,8 +57,7 @@ def statistics():
 
 @admin_bp.route('/reset', methods=["GET"])
 def reset_db():
-    admin_id = session.get('admin_id')
-    admin = get_entity_by_id(Admin, admin_id)
+    admin = get_entity_by_id(Admin, session.get('admin_id'))
 
     if admin is not None:
         delete_tables()
